@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Carrousel d'images -->
+    <div id="boulangerieCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#boulangerieCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#boulangerieCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#boulangerieCarousel" data-bs-slide-to="2"></button>
+        </div>
+        <div class="carousel-inner rounded">
+            <div class="carousel-item active">
+                <img src="{% static 'images/boulangerie 1.jpg' %}" class="d-block w-100" alt="Boulangerie" style="height: 400px; object-fit: cover;">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Bienvenue dans votre Boulangerie</h5>
+                    <p>Gérez vos achats et votre personnel efficacement</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/boulangerie 2.jpg' %}" class="d-block w-100" alt="Pains" style="height: 400px; object-fit: cover;">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Des produits de qualité</h5>
+                    <p>Suivez vos matières premières et équipements</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="{% static 'images/boulangerie 3.jpg' %}" class="d-block w-100" alt="Équipe" style="height: 400px; object-fit: cover;">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Une équipe professionnelle</h5>
+                    <p>Gérez votre personnel avec facilité</p>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#boulangerieCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+            <span class="visually-hidden">Précédent</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#boulangerieCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+            <span class="visually-hidden">Suivant</span>
+        </button>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Utilisateurs</h5>
+                    <p class="card-text display-6">{{ total_users }}</p>
+                    <small>Dont {{ active_users }} actifs</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Achats</h5>
+                    <p class="card-text display-6">{{ total_purchases }}</p>
+                    <small>Total: {{ total_purchase_amount|floatformat:0 }} FCFA</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Achats récents</h5>
+                    <p class="card-text display-6">{{ recent_purchase_amount|floatformat:0 }}</p>
+                    <small>30 derniers jours</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Actions rapides</h5>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'purchase_create' %}" class="btn btn-light btn-sm">Nouvel achat</a>
+                        <a href="{% url 'user_create' %}" class="btn btn-light btn-sm">Nouvel utilisateur</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Derniers achats -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Derniers achats</h5>
+        </div>
+        <div class="card-body">
+            {% if recent_purchases %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Catégorie</th>
+                            <th>Quantité</th>
+                            <th>Prix unitaire</th>
+                            <th>Total</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for purchase in recent_purchases %}
+                        <tr>
+                            <td>{{ purchase.name }}</td>
+                            <td>{{ purchase.get_category_display }}</td>
+                            <td>{{ purchase.quantity }}</td>
+                            <td>{{ purchase.unit_price|floatformat:0 }} FCFA</td>
+                            <td>{{ purchase.total_price|floatformat:0 }} FCFA</td>
+                            <td>{{ purchase.purchase_date|date:"d/m/Y" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p class="text-muted">Aucun achat récent</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 
