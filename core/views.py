@@ -10,7 +10,7 @@ from .forms import UserRegistrationForm, UserUpdateForm, RoleForm, PurchaseForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 
-@login_required
+# @login_required
 def dashboard(request):
     # Statistiques pour le tableau de bord
     total_users = User.objects.count()
@@ -33,106 +33,80 @@ def dashboard(request):
     }
     return render(request, 'core/dashboard.html', context)
 
-@login_required
+# @login_required
 def user_list(request):
     users = User.objects.all()
     return render(request, 'core/user_list.html', {'users': users})
 
-@login_required
+# @login_required
 def user_create(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Utilisateur créé avec succès.')
-            return redirect('user_list')
-    else:
-        form = UserRegistrationForm()
+    form = UserRegistrationForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Utilisateur créé avec succès.')
+        return redirect('user_list')
     return render(request, 'core/user_form.html', {'form': form, 'title': 'Créer un utilisateur'})
 
-@login_required
+# @login_required
 def user_update(request, pk):
     user = get_object_or_404(User, pk=pk)
-    if request.method == 'POST':
-        form = UserUpdateForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Utilisateur mis à jour avec succès.')
-            return redirect('user_list')
-    else:
-        form = UserUpdateForm(instance=user)
+    form = UserUpdateForm(request.POST or None, instance=user)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Utilisateur mis à jour avec succès.')
+        return redirect('user_list')
     return render(request, 'core/user_form.html', {'form': form, 'title': 'Modifier un utilisateur'})
 
-@login_required
+# @login_required
 def role_list(request):
     roles = Role.objects.all()
     return render(request, 'core/role_list.html', {'roles': roles})
 
-@login_required
+# @login_required
 def role_create(request):
-    if request.method == 'POST':
-        form = RoleForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Rôle créé avec succès.')
-            return redirect('role_list')
-    else:
-        form = RoleForm()
+    form = RoleForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Rôle créé avec succès.')
+        return redirect('role_list')
     return render(request, 'core/role_form.html', {'form': form, 'title': 'Créer un rôle'})
 
-@login_required
+# @login_required
 def role_update(request, pk):
     role = get_object_or_404(Role, pk=pk)
-    if request.method == 'POST':
-        form = RoleForm(request.POST, instance=role)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Rôle mis à jour avec succès.')
-            return redirect('role_list')
-    else:
-        form = RoleForm(instance=role)
+    form = RoleForm(request.POST or None, instance=role)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Rôle mis à jour avec succès.')
+        return redirect('role_list')
     return render(request, 'core/role_form.html', {'form': form, 'title': 'Modifier un rôle'})
 
-@login_required
+# @login_required
 def purchase_list(request):
-    purchases = Purchase.objects.all().order_by('-purchase_date')
+    purchases = Purchase.objects.all()
     return render(request, 'core/purchase_list.html', {'purchases': purchases})
 
-@login_required
+# @login_required
 def purchase_create(request):
-    if request.method == 'POST':
-        form = PurchaseForm(request.POST)
-        if form.is_valid():
-            purchase = form.save(commit=False)
-            purchase.created_by = request.user
-            purchase.save()
-            messages.success(request, 'Achat enregistré avec succès.')
-            return redirect('purchase_list')
-    else:
-        form = PurchaseForm()
+    form = PurchaseForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        purchase = form.save(commit=False)
+        purchase.created_by = request.user if request.user.is_authenticated else None
+        purchase.save()
+        messages.success(request, 'Achat enregistré avec succès.')
+        return redirect('purchase_list')
     return render(request, 'core/purchase_form.html', {'form': form, 'title': 'Enregistrer un achat'})
 
-@login_required
+# @login_required
 def purchase_update(request, pk):
     purchase = get_object_or_404(Purchase, pk=pk)
-    if request.method == 'POST':
-        form = PurchaseForm(request.POST, instance=purchase)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Achat mis à jour avec succès.')
-            return redirect('purchase_list')
-    else:
-        form = PurchaseForm(instance=purchase)
+    form = PurchaseForm(request.POST or None, instance=purchase)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Achat mis à jour avec succès.')
+        return redirect('purchase_list')
     return render(request, 'core/purchase_form.html', {'form': form, 'title': 'Modifier un achat'})
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, "Inscription réussie. Vous êtes maintenant connecté(e).")
-            return redirect('dashboard')
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'core/register.html', {'form': form, 'title': "Créer un compte"})
+# Désactiver la vue register (inscription)
+# def register(request):
+#     ...
