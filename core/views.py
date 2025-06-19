@@ -7,6 +7,8 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import Role, UserProfile, Purchase
 from .forms import UserRegistrationForm, UserUpdateForm, RoleForm, PurchaseForm
+from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm
 
 @login_required
 def dashboard(request):
@@ -122,3 +124,15 @@ def purchase_update(request, pk):
     else:
         form = PurchaseForm(instance=purchase)
     return render(request, 'core/purchase_form.html', {'form': form, 'title': 'Modifier un achat'})
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Inscription réussie. Vous êtes maintenant connecté(e).")
+            return redirect('dashboard')
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'core/register.html', {'form': form, 'title': "Créer un compte"})
