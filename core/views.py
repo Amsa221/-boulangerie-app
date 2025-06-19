@@ -10,7 +10,7 @@ from .forms import UserRegistrationForm, UserUpdateForm, RoleForm, PurchaseForm
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 
-# @login_required
+@login_required
 def dashboard(request):
     # Statistiques pour le tableau de bord
     total_users = User.objects.count()
@@ -33,12 +33,12 @@ def dashboard(request):
     }
     return render(request, 'core/dashboard.html', context)
 
-# @login_required
+@login_required
 def user_list(request):
     users = User.objects.all()
     return render(request, 'core/user_list.html', {'users': users})
 
-# @login_required
+@login_required
 def user_create(request):
     form = UserRegistrationForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -47,7 +47,7 @@ def user_create(request):
         return redirect('user_list')
     return render(request, 'core/user_form.html', {'form': form, 'title': 'Créer un utilisateur'})
 
-# @login_required
+@login_required
 def user_update(request, pk):
     user = get_object_or_404(User, pk=pk)
     form = UserUpdateForm(request.POST or None, instance=user)
@@ -57,12 +57,12 @@ def user_update(request, pk):
         return redirect('user_list')
     return render(request, 'core/user_form.html', {'form': form, 'title': 'Modifier un utilisateur'})
 
-# @login_required
+@login_required
 def role_list(request):
     roles = Role.objects.all()
     return render(request, 'core/role_list.html', {'roles': roles})
 
-# @login_required
+@login_required
 def role_create(request):
     form = RoleForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -71,7 +71,7 @@ def role_create(request):
         return redirect('role_list')
     return render(request, 'core/role_form.html', {'form': form, 'title': 'Créer un rôle'})
 
-# @login_required
+@login_required
 def role_update(request, pk):
     role = get_object_or_404(Role, pk=pk)
     form = RoleForm(request.POST or None, instance=role)
@@ -81,12 +81,12 @@ def role_update(request, pk):
         return redirect('role_list')
     return render(request, 'core/role_form.html', {'form': form, 'title': 'Modifier un rôle'})
 
-# @login_required
+@login_required
 def purchase_list(request):
     purchases = Purchase.objects.all()
     return render(request, 'core/purchase_list.html', {'purchases': purchases})
 
-# @login_required
+@login_required
 def purchase_create(request):
     form = PurchaseForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -97,7 +97,7 @@ def purchase_create(request):
         return redirect('purchase_list')
     return render(request, 'core/purchase_form.html', {'form': form, 'title': 'Enregistrer un achat'})
 
-# @login_required
+@login_required
 def purchase_update(request, pk):
     purchase = get_object_or_404(Purchase, pk=pk)
     form = PurchaseForm(request.POST or None, instance=purchase)
