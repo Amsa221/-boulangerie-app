@@ -107,6 +107,13 @@ def purchase_update(request, pk):
         return redirect('purchase_list')
     return render(request, 'core/purchase_form.html', {'form': form, 'title': 'Modifier un achat'})
 
-# Désactiver la vue register (inscription)
-# def register(request):
-#     ...
+def register(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('dashboard')
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'core/register.html', {'form': form})

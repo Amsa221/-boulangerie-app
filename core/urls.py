@@ -1,9 +1,10 @@
 from django.urls import path
 from . import views
+from .views import register
 
 urlpatterns = [
     path('', views.dashboard, name='dashboard'),
-    # path('register/', views.register, name='register'),
+    path('register/', register, name='register'),
     
     # URLs pour les utilisateurs
     path('users/', views.user_list, name='user_list'),
